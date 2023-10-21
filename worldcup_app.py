@@ -7,19 +7,24 @@ from worldcup_utils import (load_data, plot_matrix_chart, generate_match_results
 
 def main():
     st.title('World Cup 2023 Results')
+    st.write('Choose options on left to see desired details')
     
     # Sidebar
     st.sidebar.header('Options')
     # Add more options and widgets if needed
     
-    # Show Raw Data
-    if st.sidebar.checkbox('Show Raw Data', False):
-        st.write(df)
-    if st.sidebar.checkbox('Show Standing', False):
-        generate_standings_and_plot(df)
-    if st.sidebar.checkbox('Show Decagon', False):
+    if st.sidebar.checkbox('Standings and Victories', False):
+        st.write('Who beat whom')
         plot_decagon(df)
-#        st.write(df)
+
+    if st.sidebar.checkbox('Standings (sorted)', False):
+        st.write('Team standings')
+        generate_standings_and_plot(df)
+
+    # Show Raw Data
+    if st.sidebar.checkbox('Per match details', False):
+        st.write('Per match details')
+        st.write(df)
     
     # Compute matrix
 #    team_points, team_nrr = compute_team_metrics(data, countries)

@@ -66,6 +66,7 @@ def calculate_nrr(df, countries):
     nrr_dict = {}
     for team in total_runs_scored.keys():
         nrr = (total_runs_scored[team] / total_overs_batted[team]) - (total_runs_conceded[team] / total_overs_bowled[team])
+        #st.write(team,total_runs_scored[team],total_overs_batted[team],total_runs_conceded[team],total_overs_bowled[team])
         nrr_dict[team] = nrr
         
     return nrr_dict
@@ -114,7 +115,7 @@ def plot_bubble_chart(teams, points, nrr, matches_played):
     # Set the figure size and style
     plt.figure(figsize=(12, 8))
     sns.set_style("whitegrid")
-    print(nrr)
+    #st.write(nrr)
     print(matches_played)
 
     # Create a custom colormap for NRR - bluer for positive and redder for negative
@@ -351,7 +352,7 @@ def plot_decagon(df):
     ax.set_ylim(-1.5, 1.5)
     ax.set_aspect('equal')
     ax.axis('off')
-    plt.title("World Cup 2023 (after 18 matches)")
+    plt.title("World Cup 2023 (after %d matches)" % len(df))
     #plt.savefig('20231020.png')
 
     # Show the plot
