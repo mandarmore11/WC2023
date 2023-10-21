@@ -7,22 +7,33 @@ from worldcup_utils import (load_data, plot_matrix_chart, generate_match_results
 
 def main():
     st.title('World Cup 2023 Results')
-    st.write('Choose options on left to see desired details')
+    st.write('Choose options to see desired details')
     
     # Sidebar
-    st.sidebar.header('Options')
+    #st.sidebar.header('Options')
     # Add more options and widgets if needed
+
+    # Create a row with three columns
+    col1, col2, col3 = st.columns(3)
+
+    # Place a checkbox in each column
+    with col1:
+        checkbox1 = st.checkbox("Standings and Victories", value=True)
+    with col2:
+        checkbox2 = st.checkbox("Standings (sorted)")
+    with col3:
+        checkbox3 = st.checkbox("Per match details")
     
-    if st.sidebar.checkbox('Standings and Victories', False):
+    if checkbox1:
         st.write('Who beat whom')
         plot_decagon(df)
 
-    if st.sidebar.checkbox('Standings (sorted)', False):
+    if checkbox2:
         st.write('Team standings')
         generate_standings_and_plot(df)
 
     # Show Raw Data
-    if st.sidebar.checkbox('Per match details', False):
+    if checkbox3:
         st.write('Per match details')
         st.write(df)
     
@@ -39,6 +50,19 @@ def main():
     plot_matrix_chart(results_matrix, sorted_countries, team_points, team_nrr, df)
     
     # Any other visualizations or features can be added here...
+
+    # Divider
+    st.write("---")
+
+    # Source Code
+    st.write("**Source Code:** [GitHub Repo](https://github.com/AshishMahabal/WC2023) PRs welcome.")
+
+    # Version
+    st.write("**Version:** 0.0.1")
+
+    # Disclaimer
+    st.write("### Disclaimer")
+    st.write("This app makes no guarantees - use at your own peril.")
 
 # Run Streamlit app
 if __name__ == '__main__':
