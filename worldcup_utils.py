@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
+import networkx as nx
 
 # ... All your previously discussed functions go here ...
 
@@ -378,3 +379,51 @@ def generate_match_results(df):
                 results.append(f"{team2} beat {team1}")
     
     return results
+
+def get_country_data(df, country):
+    return df[(df['Bat1'] == country) | (df['Bat2'] == country)]
+
+def plot_country_graph(country, df, countries):
+    G = nx.MultiDiGraph()  # MultiDiGraph to allow for multiple edge types (like bidirectional for draws)
+
+    # Filtering matches involving the country.
+    relevant_matches = df[(df['Bat1'] == country) | (df['Bat2'] == country)]
+
+    for _, row in relevant_matches.iterrows():
+        if row['Result'] == country:  # If the country won the match
+            G.add_edge(country, row['Bat2'] if row['Bat1'] == country else row['Bat1'])
+        elif row['Result'] in countries:  # If the country lost the match
+            G.add_edge(row['Bat2'] if row['Bat1'] == country else row['Bat1'], country)
+        elif row['Result'] == "draw" or row['Result'] == "tie":
+            # Add bidirectional arrows for draws and ties
+            G.add_edge(country, row['Bat2'] if row['Bat1'] == country else row['Bat1'], relation="draw")
+            G.add_edge(row['Bat2'] if row['Bat1'] == country else row['Bat1'], country, relation="draw")
+
+    pos = nx.shell_layout(G)
+
+    color_map = []
+    for node in G:
+        if node == country:
+            color_map.append('yellow')
+        elif G.out_degree(node) > 0 and G.in_degree(node) == 0:
+            color_map.append('blue')  # Winners
+        elif G.in_degree(node) > 0 and G.out_degree(node) == 0:
+            color_map.append('red')  # Losers
+        else:
+            color_map.append('green')  # For bidirectional arrows (draws/ties)
+
+    edge_colors = ['gray' if G[u][v][0].get('relation') != "draw" else 'orange' for u, v in G.edges()]
+
+    nx.draw(G, pos, with_labels=True, node_size=3000, node_color=color_map, font_size=15, width=3, edge_color=edge_colors, arrowsize=20)
+    plt.title(f"Matches involving {country}\n")
+    
+    st.pyplot(plt.gcf())
+
+def get_index_for_preselection(items, item_name):
+    try:
+        return items.index(item_name)
+    except ValueError:
+        return 0
+
+#index_to_preselect = get_index_for_preselection(countries, 'Ind')
+
