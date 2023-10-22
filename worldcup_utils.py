@@ -404,7 +404,7 @@ def plot_country_graph(country, df, countries):
     color_map = []
     for node in G:
         if node == country:
-            color_map.append('yellow')
+            color_map.append('black')
         elif G.out_degree(node) > 0 and G.in_degree(node) == 0:
             color_map.append('blue')  # Winners
         elif G.in_degree(node) > 0 and G.out_degree(node) == 0:
@@ -414,7 +414,7 @@ def plot_country_graph(country, df, countries):
 
     edge_colors = ['gray' if G[u][v][0].get('relation') != "draw" else 'orange' for u, v in G.edges()]
 
-    nx.draw(G, pos, with_labels=True, node_size=3000, node_color=color_map, font_size=15, width=3, edge_color=edge_colors, arrowsize=20)
+    nx.draw(G, pos, with_labels=True, node_size=3000, node_color=color_map, font_size=15, width=3, edge_color=edge_colors, arrowsize=20, font_color='white')
     plt.title(f"Matches involving {country}\n")
     
     st.pyplot(plt.gcf())
